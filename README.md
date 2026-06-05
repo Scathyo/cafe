@@ -1,2 +1,514 @@
-# Cafe
-Cafe Morgenrot
+cat > /mnt/user-data/outputs/cafe-morgenrot/cafe-morgenrot-komplett.html << 'HTMLEOF'
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Café Morgenrot</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --cream: #F5EFE0;
+  --warm-white: #FBF7F0;
+  --espresso: #2C1A0E;
+  --mocha: #6B3F1F;
+  --caramel: #C8843A;
+  --sage: #7A8C6E;
+  --dusty-rose: #C4967A;
+  --sidebar-width: 240px;
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--warm-white);
+  color: var(--espresso);
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  display: flex;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  position: fixed; top: 0; left: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  background: var(--espresso);
+  display: flex; flex-direction: column;
+  padding: 2.5rem 0;
+  z-index: 200;
+  border-right: 1px solid rgba(245,239,224,0.06);
+}
+.sidebar-logo {
+  padding: 0 2rem 2.5rem;
+  border-bottom: 1px solid rgba(245,239,224,0.08);
+  margin-bottom: 2rem;
+}
+.sidebar-logo a {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem; color: var(--cream);
+  text-decoration: none; line-height: 1.2; display: block; cursor: pointer;
+}
+.sidebar-logo span {
+  display: block; font-size: 0.68rem; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--caramel); margin-top: 0.3rem;
+  font-family: 'Jost', sans-serif; font-weight: 400;
+}
+.sidebar nav { flex: 1; display: flex; flex-direction: column; gap: 0.25rem; padding: 0 1rem; }
+.sidebar nav a {
+  display: flex; align-items: center; gap: 0.85rem;
+  padding: 0.75rem 1rem; border-radius: 6px;
+  font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase;
+  color: rgba(245,239,224,0.55); text-decoration: none;
+  transition: background 0.2s, color 0.2s; cursor: pointer;
+}
+.sidebar nav a .nav-icon { font-size: 1rem; width: 20px; text-align: center; flex-shrink: 0; }
+.sidebar nav a:hover { background: rgba(245,239,224,0.06); color: var(--cream); }
+.sidebar nav a.active { background: rgba(200,132,58,0.15); color: var(--caramel); }
+.sidebar-footer {
+  padding: 2rem; border-top: 1px solid rgba(245,239,224,0.08);
+  font-size: 0.72rem; color: rgba(245,239,224,0.25); letter-spacing: 0.05em; line-height: 1.6;
+}
+
+/* ── MAIN ── */
+.main { margin-left: var(--sidebar-width); flex: 1; min-height: 100vh; }
+.page { display: none; }
+.page.active { display: block; }
+
+/* ── SHARED ── */
+.section-label { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--caramel); margin-bottom: 0.75rem; }
+.section-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 3vw, 3rem); line-height: 1.15; color: var(--espresso); margin-bottom: 1.5rem; }
+
+/* ── HOME: HERO ── */
+.hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; }
+.hero-left { display: flex; flex-direction: column; justify-content: center; padding: 6rem 4rem 6rem 5rem; }
+.hero-eyebrow { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--caramel); margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.8s 0.2s forwards; }
+.hero-title { font-family: 'Playfair Display', serif; font-size: clamp(3rem, 4.5vw, 5rem); line-height: 1.1; color: var(--espresso); margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.8s 0.4s forwards; }
+.hero-title em { font-style: italic; color: var(--caramel); }
+.hero-desc { font-size: 1rem; line-height: 1.8; color: var(--mocha); max-width: 360px; margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.8s 0.6s forwards; }
+.hero-cta { display: inline-block; padding: 0.9rem 2.5rem; background: var(--espresso); color: var(--cream); font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; transition: background 0.2s, transform 0.2s; opacity: 0; animation: fadeUp 0.8s 0.8s forwards; cursor: pointer; border: none; font-family: 'Jost', sans-serif; }
+.hero-cta:hover { background: var(--mocha); transform: translateY(-2px); }
+.hero-right { position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 1rem; background: radial-gradient(ellipse at 30% 40%, rgba(200,132,58,0.22) 0%, transparent 60%), radial-gradient(ellipse at 70% 70%, rgba(122,140,110,0.18) 0%, transparent 50%), var(--cream); }
+.hero-right svg { opacity: 0; animation: fadeUp 1s 1s forwards; }
+.hero-right p { font-family: 'Playfair Display', serif; font-size: 0.9rem; font-style: italic; color: var(--mocha); opacity: 0; animation: fadeUp 1s 1.2s forwards; }
+
+/* ── HOME: ABOUT ── */
+.about { background: var(--cream); display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; padding: 7rem 5rem; }
+.about p { font-size: 1rem; line-height: 1.9; color: var(--mocha); margin-bottom: 1rem; }
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.about-card { background: var(--warm-white); padding: 2rem 1.5rem; text-align: center; }
+.about-card-num { font-family: 'Playfair Display', serif; font-size: 2.8rem; color: var(--caramel); line-height: 1; }
+.about-card-label { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mocha); margin-top: 0.5rem; }
+
+/* ── MENU ── */
+.page-header { background: var(--espresso); padding: 5rem 5rem 4rem; color: var(--cream); }
+.page-header .section-label { color: var(--caramel); }
+.page-header .section-title { color: var(--cream); margin-bottom: 0.75rem; }
+.page-header p { color: rgba(245,239,224,0.6); font-size: 1rem; line-height: 1.8; max-width: 520px; }
+.menu-body { padding: 4rem 5rem; background: var(--warm-white); }
+.menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3rem; }
+.menu-category h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--espresso); margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 1px solid rgba(44,26,14,0.12); }
+.menu-item { display: flex; justify-content: space-between; align-items: baseline; padding: 0.65rem 0; border-bottom: 1px dotted rgba(44,26,14,0.1); }
+.menu-item-name { font-size: 0.9rem; color: var(--espresso); }
+.menu-item-desc { font-size: 0.78rem; color: var(--mocha); margin-top: 0.15rem; }
+.menu-item-price { font-size: 0.85rem; color: var(--caramel); font-weight: 500; white-space: nowrap; margin-left: 1rem; }
+.menu-note { margin-top: 3rem; padding: 1.5rem 2rem; background: var(--cream); border-left: 3px solid var(--caramel); font-size: 0.88rem; color: var(--mocha); line-height: 1.7; font-style: italic; }
+
+/* ── HOURS ── */
+.hours-grid { display: grid; grid-template-columns: 1fr 1fr; min-height: 100vh; }
+.hours-left { background: var(--espresso); padding: 6rem 4rem; display: flex; flex-direction: column; justify-content: center; }
+.hours-left .section-title { color: var(--cream); }
+.hours-left .section-label { color: var(--caramel); }
+.hours-left > p { color: rgba(245,239,224,0.6); font-size: 1rem; line-height: 1.8; margin-bottom: 2.5rem; }
+.hours-table { width: 100%; }
+.hours-row { display: flex; justify-content: space-between; padding: 0.85rem 0; border-bottom: 1px solid rgba(245,239,224,0.08); font-size: 0.9rem; }
+.hours-day { color: rgba(245,239,224,0.55); letter-spacing: 0.04em; }
+.hours-time { color: var(--cream); }
+.hours-closed { color: var(--dusty-rose); }
+.hours-right { background: var(--cream); padding: 6rem 4rem; display: flex; flex-direction: column; justify-content: center; }
+.hours-right .section-title { font-size: clamp(1.6rem, 2.5vw, 2.4rem); }
+.map-placeholder { width: 100%; height: 220px; background: repeating-linear-gradient(0deg, rgba(44,26,14,0.04) 0px, rgba(44,26,14,0.04) 1px, transparent 1px, transparent 40px), repeating-linear-gradient(90deg, rgba(44,26,14,0.04) 0px, rgba(44,26,14,0.04) 1px, transparent 1px, transparent 40px), var(--warm-white); margin: 1.5rem 0; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 0.5rem; border: 1px solid rgba(44,26,14,0.1); }
+.map-pin { font-size: 2rem; }
+.map-label { font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mocha); }
+.address-block { margin-top: 1.5rem; }
+.address-line { display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1rem; }
+.address-icon { width: 36px; height: 36px; background: var(--warm-white); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1rem; }
+.address-text { font-size: 0.9rem; color: var(--mocha); line-height: 1.6; }
+.address-text strong { display: block; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--caramel); margin-bottom: 0.2rem; font-weight: 400; }
+
+/* ── CONTACT ── */
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; min-height: 100vh; }
+.contact-left { background: var(--cream); padding: 6rem 4rem; }
+.contact-left p { font-size: 1rem; line-height: 1.9; color: var(--mocha); margin-bottom: 2rem; }
+form { display: flex; flex-direction: column; gap: 1rem; }
+form input, form textarea {
+  background: var(--warm-white); border: 1px solid rgba(44,26,14,0.12);
+  padding: 0.9rem 1.1rem; font-family: 'Jost', sans-serif; font-size: 0.9rem;
+  color: var(--espresso); outline: none; transition: border-color 0.2s; width: 100%;
+}
+form input:focus, form textarea:focus { border-color: var(--caramel); }
+form textarea { resize: vertical; min-height: 130px; }
+form button { padding: 0.9rem 2rem; background: var(--espresso); color: var(--cream); border: none; cursor: pointer; font-family: 'Jost', sans-serif; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase; transition: background 0.2s; align-self: flex-start; }
+form button:hover { background: var(--mocha); }
+.contact-right { background: var(--espresso); padding: 6rem 4rem; display: flex; flex-direction: column; justify-content: center; }
+.contact-right .section-title { color: var(--cream); }
+.contact-right .section-label { color: var(--caramel); }
+.contact-info-block { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; }
+.contact-info-item { display: flex; gap: 1rem; align-items: flex-start; }
+.cinfo-icon { width: 38px; height: 38px; background: rgba(245,239,224,0.06); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+.cinfo-text { font-size: 0.9rem; color: rgba(245,239,224,0.7); line-height: 1.6; }
+.cinfo-text strong { display: block; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--caramel); margin-bottom: 0.2rem; font-weight: 400; }
+
+/* ── IMPRESSUM ── */
+.impressum-body { padding: 5rem; max-width: 760px; }
+.impressum-body h2 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--espresso); margin: 2.5rem 0 0.75rem; }
+.impressum-body h2:first-of-type { margin-top: 0; }
+.impressum-body p, .impressum-body address { font-size: 0.92rem; color: var(--mocha); line-height: 1.9; font-style: normal; }
+.impressum-body a { color: var(--caramel); text-decoration: none; }
+.impressum-divider { border: none; border-top: 1px solid rgba(44,26,14,0.1); margin: 3rem 0; }
+
+/* ── FOOTER ── */
+.page-footer { background: var(--espresso); padding: 2rem 5rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(245,239,224,0.06); }
+.page-footer p { font-size: 0.72rem; color: rgba(245,239,224,0.3); letter-spacing: 0.06em; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── MOBILE ── */
+.mobile-menu-btn { display: none; }
+@media (max-width: 860px) {
+  :root { --sidebar-width: 0px; }
+  .sidebar { transform: translateX(-100%); transition: transform 0.3s; width: 240px; }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; }
+  .mobile-menu-btn { display: flex !important; position: fixed; top: 1rem; left: 1rem; z-index: 300; width: 44px; height: 44px; background: var(--espresso); border: none; cursor: pointer; align-items: center; justify-content: center; flex-direction: column; gap: 5px; }
+  .mobile-menu-btn span { display: block; width: 22px; height: 2px; background: var(--cream); }
+  .hero { grid-template-columns: 1fr; }
+  .hero-left { padding: 5rem 2rem 3rem; }
+  .hero-right { display: none; }
+  .about { grid-template-columns: 1fr; padding: 4rem 2rem; gap: 3rem; }
+  .menu-body, .page-header { padding: 4rem 2rem; }
+  .menu-grid { grid-template-columns: 1fr; }
+  .hours-grid, .contact-grid { grid-template-columns: 1fr; }
+  .hours-left, .hours-right, .contact-left, .contact-right { padding: 4rem 2rem; }
+  .impressum-body { padding: 3rem 2rem; }
+  .page-footer { flex-direction: column; gap: 0.5rem; text-align: center; padding: 1.5rem 2rem; }
+}
+</style>
+</head>
+<body>
+
+<button class="mobile-menu-btn" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Menü">
+  <span></span><span></span><span></span>
+</button>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <a onclick="showPage('home')">Café Morgenrot<span>München seit 2012</span></a>
+  </div>
+  <nav>
+    <a onclick="showPage('home')" data-page="home"><span class="nav-icon">☕</span> Home</a>
+    <a onclick="showPage('menu')" data-page="menu"><span class="nav-icon">📋</span> Speisekarte</a>
+    <a onclick="showPage('hours')" data-page="hours"><span class="nav-icon">🕐</span> Öffnungszeiten</a>
+    <a onclick="showPage('contact')" data-page="contact"><span class="nav-icon">✉️</span> Kontakt</a>
+    <a onclick="showPage('impressum')" data-page="impressum"><span class="nav-icon">📄</span> Impressum</a>
+  </nav>
+  <div class="sidebar-footer">
+    Maximilianstraße 42<br>80538 München<br><br>089 / 123 456 78
+  </div>
+</aside>
+
+<main class="main">
+
+  <!-- ═══════════════ HOME ═══════════════ -->
+  <div class="page active" id="page-home">
+    <section class="hero">
+      <div class="hero-left">
+        <p class="hero-eyebrow">Seit 2012 in Münchens Herz</p>
+        <h1 class="hero-title">Wo jeder<br>Morgen<br><em>besonders</em> wird.</h1>
+        <p class="hero-desc">Handgerösteter Kaffee, selbstgebackene Kuchen und ein Ort zum Durchatmen — mitten in der Stadt.</p>
+        <button class="hero-cta" onclick="showPage('menu')">Speisekarte ansehen</button>
+      </div>
+      <div class="hero-right">
+        <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="52" cy="85" rx="36" ry="8" fill="rgba(107,63,31,0.15)"/>
+          <rect x="16" y="48" width="72" height="40" rx="4" fill="none" stroke="#6B3F1F" stroke-width="2.5"/>
+          <path d="M88 58 Q104 58 104 68 Q104 78 88 78" fill="none" stroke="#6B3F1F" stroke-width="2.5"/>
+          <line x1="16" y1="48" x2="88" y2="48" stroke="#6B3F1F" stroke-width="2.5"/>
+          <rect x="28" y="48" width="48" height="4" fill="#6B3F1F" rx="2"/>
+          <path d="M36 38 Q38 28 40 38" fill="none" stroke="#C8843A" stroke-width="2" stroke-linecap="round"/>
+          <path d="M52 34 Q54 22 56 34" fill="none" stroke="#C8843A" stroke-width="2" stroke-linecap="round"/>
+          <path d="M68 38 Q70 28 72 38" fill="none" stroke="#C8843A" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <p>Frisch gebrüht, täglich ab 7:30 Uhr</p>
+      </div>
+    </section>
+    <section class="about">
+      <div>
+        <p class="section-label">Unsere Geschichte</p>
+        <h2 class="section-title">Ein Café mit<br>Seele und Haltung</h2>
+        <p>Das Café Morgenrot entstand 2012 aus einer einfachen Überzeugung: Guter Kaffee verdient Zeit. Wir rösten unsere Bohnen selbst, backen täglich frisch und empfangen unsere Gäste wie alte Freunde.</p>
+        <p>Unsere Zutaten kommen von lokalen Bauern aus dem Münchner Umland — saisonal, fair und mit Geschmack.</p>
+      </div>
+      <div class="about-grid">
+        <div class="about-card"><div class="about-card-num">12+</div><div class="about-card-label">Jahre in München</div></div>
+        <div class="about-card"><div class="about-card-num">8</div><div class="about-card-label">Kaffeesorten</div></div>
+        <div class="about-card"><div class="about-card-num">100%</div><div class="about-card-label">Selbst gebacken</div></div>
+        <div class="about-card"><div class="about-card-num">★4.9</div><div class="about-card-label">Google Bewertung</div></div>
+      </div>
+    </section>
+    <footer class="page-footer">
+      <span style="font-family:'Playfair Display',serif;color:var(--cream);font-size:1.1rem;">Café Morgenrot</span>
+      <p>© 2024 Café Morgenrot</p>
+      <p>Mit ♥ gemacht in München</p>
+    </footer>
+  </div>
+
+  <!-- ═══════════════ SPEISEKARTE ═══════════════ -->
+  <div class="page" id="page-menu">
+    <div class="page-header">
+      <p class="section-label">Was wir anbieten</p>
+      <h1 class="section-title">Unsere Speisekarte</h1>
+      <p>Einfach gut, jeden Tag. Unsere Karte wechselt mit den Jahreszeiten — was bleibt, ist Qualität und Sorgfalt.</p>
+    </div>
+    <div class="menu-body">
+      <div class="menu-grid">
+        <div class="menu-category">
+          <h3>☕ Kaffee & Heißgetränke</h3>
+          <div class="menu-item"><div><div class="menu-item-name">Espresso</div><div class="menu-item-desc">Doppelt geröstet, intensiv</div></div><div class="menu-item-price">2,80 €</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Doppelter Espresso</div><div class="menu-item-desc">Für den echten Morgen</div></div><div class="menu-item-price">3,40 €</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Cappuccino</div><div class="menu-item-desc">Mit Barista-Milchschaum</div></div><div class="menu-item-price">3,90 €</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Flat White</div><div class="menu-item-desc">Cremig & stark</div></div><div class="menu-item-price">4,20 €</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Latte Macchiato</div><div class="menu-item-desc">Sanft & milchig</div></div><div class="menu-item-price">4,50 €</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Café Americano</div><div class="menu-item-desc">Groß & klassisch</div></div><div class="menu-item-price">3,60 €</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Chai Latte</div><div class="menu-item-desc">Hausgemischte Gewürze</div></div><div class="menu-item-price">4,20 €</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Heiße Schokolade</div><div class="menu-item-desc">Dunkle Valrhona-Kuvertüre</div></div><div class="menu-item-price">4,50 €</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Tee (Auswahl)</div><div class="menu-item-desc">Lose Blätter, täglich wechselnd</div></div><div class="menu-item-price">3,20 €</div></div>
+        </div>
+        <div class="menu-category">
+          <h3>🥐 Frühstück & Herzhaftes</h3>
+          <div class="menu-item"><div><div class="menu-item-name">Avocado Toast</div><div class="menu-item-desc">Sauerteig, Feta, Spiegelei, Kresse</div></div><div class="menu-item-price">9,50 €</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Granola Bowl</div><div class="menu-item-desc">Joghurt, Beeren, Honig, Nüsse</div></div><div class="menu-item-price">7,80 €</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Morgenrot Teller</div><div class="menu-item-desc">Brot, Aufschnitt, Ei, Obst, Butter</div></div><div class="menu-item-price">12,50 €</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Croissant</div><div class="menu-item-desc">Frisch, täglich gebacken</div></div><div class="menu-item-price">3,20 €</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Bagel mit Lachs</div><div class="menu-item-desc">Frischkäse, Kapern, rote Zwiebel</div></div><div class="menu-item-price">10,80 €</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Quiche des Tages</div><div class="menu-item-desc">Saisonal, auf Tafel</div></div><div class="menu-item-price">8,50 €</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Porridge</div><div class="menu-item-desc">Haferflocken, Apfel, Zimt</div></div><div class="menu-item-price">6,90 €</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Rührei auf Toast</div><div class="menu-item-desc">3 Eier, Schnittlauch, Butter</div></div><div class="menu-item-price">8,20 €</div></div>
+        </div>
+        <div class="menu-category">
+          <h3>🍰 Kuchen & Süßes</h3>
+          <div class="menu-item"><div><div class="menu-item-name">Käsekuchen</div><div class="menu-item-desc">Omas Rezept, cremig & klassisch</div></div><div class="menu-item-price">4,50 €</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Zimtschnecke</div><div class="menu-item-desc">Warm, mit Frischkäseglasur</div></div><div class="menu-item-price">3,80 €</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Brownie</div><div class="menu-item-desc">Dunkelschokolade, Walnuss</div></div><div class="menu-item-price">3,50 €</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Tarte du Jour</div><div class="menu-item-desc">Saisonal wechselnd</div></div><div class="menu-item-price">4,80 €</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Bananenbrot</div><div class="menu-item-desc">Mit Walnüssen, glutenfrei möglich</div></div><div class="menu-item-price">3,60 €</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Muffin des Tages</div><div class="menu-item-desc">Frisch gebacken, wechselnd</div></div><div class="menu-item-price">3,20 €</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Tiramisu</div><div class="menu-item-desc">Klassisch, hausgemacht</div></div><div class="menu-item-price">5,20 €</div></div>
+        </div>
+        <div class="menu-category" style="margin-top:2rem;">
+          <h3>🧃 Kaltgetränke</h3>
+          <div class="menu-item"><div><div class="menu-item-name">Cold Brew</div><div class="menu-item-desc">12h kalt gebrüht</div></div><div class="menu-item-price">4,50 €</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Eiskaffee</div><div class="menu-item-desc">Espresso, Vanilleeis, Sahne</div></div><div class="menu-item-price">5,20 €</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Frisch gepresster Saft</div><div class="menu-item-desc">Orange oder Karotte-Ingwer</div></div><div class="menu-item-price">4,80 €</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Limonade (hausgemacht)</div><div class="menu-item-desc">Zitrone-Minze oder Holunder</div></div><div class="menu-item-price">3,90 €</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Wasser (still/sprudelnd)</div><div class="menu-item-desc">0,3 l / 0,5 l</div></div><div class="menu-item-price">ab 2,20 €</div></div>
+        </div>
+      </div>
+      <div class="menu-note">Alle Backwaren werden täglich frisch in unserer Küche hergestellt. Allergene auf Anfrage. Preise inkl. MwSt. Speisekarte saisonal — Änderungen vorbehalten.</div>
+    </div>
+    <footer class="page-footer">
+      <span style="font-family:'Playfair Display',serif;color:var(--cream);font-size:1.1rem;">Café Morgenrot</span>
+      <p>© 2024 Café Morgenrot</p>
+      <p>Mit ♥ gemacht in München</p>
+    </footer>
+  </div>
+
+  <!-- ═══════════════ ÖFFNUNGSZEITEN ═══════════════ -->
+  <div class="page" id="page-hours">
+    <div class="hours-grid">
+      <div class="hours-left">
+        <p class="section-label">Wann wir da sind</p>
+        <h1 class="section-title">Öffnungs&shy;zeiten</h1>
+        <p>Ob zum Morgen-Espresso, einem langen Frühstück oder einem ruhigen Nachmittagskaffee — wir freuen uns auf Ihren Besuch.</p>
+        <div class="hours-table">
+          <div class="hours-row"><span class="hours-day">Montag</span><span class="hours-time">7:30 – 18:00 Uhr</span></div>
+          <div class="hours-row"><span class="hours-day">Dienstag</span><span class="hours-time">7:30 – 18:00 Uhr</span></div>
+          <div class="hours-row"><span class="hours-day">Mittwoch</span><span class="hours-time">7:30 – 18:00 Uhr</span></div>
+          <div class="hours-row"><span class="hours-day">Donnerstag</span><span class="hours-time">7:30 – 18:00 Uhr</span></div>
+          <div class="hours-row"><span class="hours-day">Freitag</span><span class="hours-time">7:30 – 19:00 Uhr</span></div>
+          <div class="hours-row"><span class="hours-day">Samstag</span><span class="hours-time">8:00 – 17:00 Uhr</span></div>
+          <div class="hours-row"><span class="hours-day">Sonntag</span><span class="hours-time">9:00 – 15:00 Uhr</span></div>
+          <div class="hours-row"><span class="hours-day">Feiertage</span><span class="hours-closed">Geschlossen</span></div>
+        </div>
+        <p style="margin-top:1.5rem;font-size:0.82rem;color:rgba(245,239,224,0.4);line-height:1.7;">An Brückentagen können die Zeiten abweichen.<br>Aktuelle Infos auf unserem Instagram.</p>
+      </div>
+      <div class="hours-right">
+        <p class="section-label">Wie Sie uns finden</p>
+        <h2 class="section-title">Anfahrt &<br>Lage</h2>
+        <div class="map-placeholder">
+          <div class="map-pin">📍</div>
+          <div class="map-label">Maximilianstraße 42, München</div>
+          <a href="https://maps.google.com/?q=Maximilianstraße+42+München" target="_blank" style="font-size:0.75rem;color:var(--caramel);letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;margin-top:0.25rem;">In Google Maps öffnen →</a>
+        </div>
+        <div class="address-block">
+          <div class="address-line">
+            <div class="address-icon">📍</div>
+            <div class="address-text"><strong>Adresse</strong>Maximilianstraße 42<br>80538 München</div>
+          </div>
+          <div class="address-line">
+            <div class="address-icon">🚇</div>
+            <div class="address-text"><strong>U-Bahn</strong>U4/U5 Max-Weber-Platz (5 Min. Fußweg)<br>Tram 19 Maximilianstraße (direkt)</div>
+          </div>
+          <div class="address-line">
+            <div class="address-icon">🅿️</div>
+            <div class="address-text"><strong>Parken</strong>Tiefgarage Maximilianstraße (100m)<br>Parkdauer max. 2h, Mo–Sa</div>
+          </div>
+          <div class="address-line">
+            <div class="address-icon">🚲</div>
+            <div class="address-text"><strong>Fahrrad</strong>Abstellplätze direkt vor dem Eingang<br>MVG Rad-Station in 50m Entfernung</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="page-footer">
+      <span style="font-family:'Playfair Display',serif;color:var(--cream);font-size:1.1rem;">Café Morgenrot</span>
+      <p>© 2024 Café Morgenrot</p>
+      <p>Mit ♥ gemacht in München</p>
+    </footer>
+  </div>
+
+  <!-- ═══════════════ KONTAKT ═══════════════ -->
+  <div class="page" id="page-contact">
+    <div class="contact-grid">
+      <div class="contact-left">
+        <p class="section-label">Schreiben Sie uns</p>
+        <h1 class="section-title">Kontakt</h1>
+        <p>Fragen, Reservierungen oder einfach ein nettes Wort — wir freuen uns von Ihnen zu hören.</p>
+        <form onsubmit="handleSubmit(event)">
+          <input type="text" placeholder="Ihr Name" required />
+          <input type="email" placeholder="Ihre E-Mail-Adresse" required />
+          <input type="text" placeholder="Betreff" />
+          <textarea placeholder="Ihre Nachricht..."></textarea>
+          <button type="submit">Nachricht senden</button>
+        </form>
+      </div>
+      <div class="contact-right">
+        <p class="section-label">Direkt erreichen</p>
+        <h2 class="section-title" style="color:var(--cream);">Wir sind<br>für Sie da.</h2>
+        <div class="contact-info-block">
+          <div class="contact-info-item">
+            <div class="cinfo-icon">📍</div>
+            <div class="cinfo-text"><strong>Adresse</strong>Maximilianstraße 42<br>80538 München</div>
+          </div>
+          <div class="contact-info-item">
+            <div class="cinfo-icon">📞</div>
+            <div class="cinfo-text"><strong>Telefon</strong>089 / 123 456 78<br>Mo–Fr 9:00–17:00 Uhr</div>
+          </div>
+          <div class="contact-info-item">
+            <div class="cinfo-icon">✉️</div>
+            <div class="cinfo-text"><strong>E-Mail</strong>hallo@cafe-morgenrot.de<br>Antwort innerhalb 24h</div>
+          </div>
+          <div class="contact-info-item">
+            <div class="cinfo-icon">📸</div>
+            <div class="cinfo-text"><strong>Instagram</strong>@cafe.morgenrot<br>Aktuelle Infos & Fotos</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="page-footer">
+      <span style="font-family:'Playfair Display',serif;color:var(--cream);font-size:1.1rem;">Café Morgenrot</span>
+      <p>© 2024 Café Morgenrot</p>
+      <p>Mit ♥ gemacht in München</p>
+    </footer>
+  </div>
+
+  <!-- ═══════════════ IMPRESSUM ═══════════════ -->
+  <div class="page" id="page-impressum">
+    <div class="page-header">
+      <p class="section-label">Rechtliches</p>
+      <h1 class="section-title">Impressum &<br>Datenschutz</h1>
+    </div>
+    <div class="impressum-body">
+      <h2>Angaben gemäß § 5 TMG</h2>
+      <address>
+        Café Morgenrot GbR<br>
+        Maximilianstraße 42<br>
+        80538 München<br><br>
+        Inhaber: Max Mustermann<br>
+        Telefon: 089 / 123 456 78<br>
+        E-Mail: <a href="mailto:hallo@cafe-morgenrot.de">hallo@cafe-morgenrot.de</a>
+      </address>
+
+      <hr class="impressum-divider">
+
+      <h2>Umsatzsteuer-ID</h2>
+      <p>Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:<br>DE 123 456 789</p>
+
+      <h2>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h2>
+      <p>Max Mustermann<br>Maximilianstraße 42, 80538 München</p>
+
+      <hr class="impressum-divider">
+
+      <h2>Datenschutzerklärung</h2>
+      <p>Die Nutzung unserer Website ist in der Regel ohne Angabe personenbezogener Daten möglich. Soweit auf unseren Seiten personenbezogene Daten erhoben werden, erfolgt dies stets auf freiwilliger Basis.</p>
+
+      <h2>Kontaktformular</h2>
+      <p>Wenn Sie uns per Kontaktformular Anfragen zukommen lassen, werden Ihre Angaben aus dem Anfrageformular inklusive der von Ihnen dort angegebenen Kontaktdaten zwecks Bearbeitung der Anfrage und für den Fall von Anschlussfragen bei uns gespeichert. Diese Daten geben wir nicht ohne Ihre Einwilligung weiter.</p>
+
+      <h2>Cookies</h2>
+      <p>Diese Website verwendet keine Cookies.</p>
+
+      <h2>Google Fonts</h2>
+      <p>Diese Seite nutzt zur einheitlichen Darstellung von Schriftarten Google Fonts. Beim Aufruf einer Seite lädt Ihr Browser die benötigten Fonts in Ihren Browsercache. Wenn Ihr Browser Google Fonts nicht unterstützt, wird eine Standardschrift von Ihrem Computer genutzt.</p>
+
+      <h2>Haftungsausschluss</h2>
+      <p>Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen. Als Diensteanbieter sind wir gemäß § 7 Abs. 1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich.</p>
+
+      <hr class="impressum-divider">
+      <p style="font-size:0.8rem;color:rgba(107,63,31,0.5);">Stand: Januar 2024 · Dieses Impressum ist ein Beispieldokument für Übungszwecke.</p>
+    </div>
+    <footer class="page-footer">
+      <span style="font-family:'Playfair Display',serif;color:var(--cream);font-size:1.1rem;">Café Morgenrot</span>
+      <p>© 2024 Café Morgenrot</p>
+      <p>Mit ♥ gemacht in München</p>
+    </footer>
+  </div>
+
+</main>
+
+<script>
+function showPage(id) {
+  // Hide all pages
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  // Show target
+  document.getElementById('page-' + id).classList.add('active');
+  // Update nav
+  document.querySelectorAll('.sidebar nav a').forEach(a => {
+    a.classList.toggle('active', a.dataset.page === id);
+  });
+  // Scroll to top
+  window.scrollTo(0, 0);
+  // Close mobile sidebar
+  document.querySelector('.sidebar').classList.remove('open');
+  // Re-trigger hero animations
+  if (id === 'home') {
+    const animated = document.querySelectorAll('.hero-eyebrow, .hero-title, .hero-desc, .hero-cta, .hero-right svg, .hero-right p');
+    animated.forEach(el => { el.style.animation = 'none'; el.offsetHeight; el.style.animation = ''; });
+  }
+}
+function handleSubmit(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('button');
+  btn.textContent = 'Gesendet ✓';
+  btn.style.background = '#7A8C6E';
+  setTimeout(() => { btn.textContent = 'Nachricht senden'; btn.style.background = ''; e.target.reset(); }, 3000);
+}
+// Set initial active nav
+document.querySelector('[data-page="home"]').classList.add('active');
+</script>
+</body>
+</html>
+HTMLEOF
+echo "Done"
